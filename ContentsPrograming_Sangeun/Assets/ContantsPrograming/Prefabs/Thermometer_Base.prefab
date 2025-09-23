@@ -444,6 +444,7 @@ GameObject:
   - component: {fileID: 5660855197211320898}
   - component: {fileID: 2393411552523572106}
   - component: {fileID: 8678268219776609738}
+  - component: {fileID: 5158043381257389202}
   m_Layer: 0
   m_Name: Temperature_Bar
   m_TagString: Untagged
@@ -460,11 +461,11 @@ Transform:
   m_GameObject: {fileID: 4503738379028656517}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.98, z: 0.1}
+  m_LocalPosition: {x: 0, y: 1.5199999, z: 0.1}
   m_LocalScale: {x: 0.6, y: 3, z: 0.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 793837523419919166}
+  m_Father: {fileID: 5538823468567404669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5660855197211320898
 MeshFilter:
@@ -540,6 +541,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5158043381257389202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4503738379028656517}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1adfbfd0ff64f094b8a4c8a0b137d865, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  temperature: 7.7
+  coldColor: {r: 0, g: 0, b: 1, a: 1}
+  normalColor: {r: 0, g: 1, b: 0, a: 1}
+  hotColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &4646442523687581233
 GameObject:
   m_ObjectHideFlags: 0
@@ -1110,8 +1127,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3307361926600282791}
-  - {fileID: 7074653480316824672}
   - {fileID: 6953739881010590387}
+  - {fileID: 5538823468567404669}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6671309824792959300
@@ -1438,6 +1455,53 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &7811543148621072079
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5538823468567404669}
+  - component: {fileID: 8654093129228169984}
+  m_Layer: 0
+  m_Name: Temperature_Bar_Origin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5538823468567404669
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7811543148621072079}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -2.5, z: 0}
+  m_LocalScale: {x: 1, y: 1.6337, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7074653480316824672}
+  m_Father: {fileID: 793837523419919166}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8654093129228169984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7811543148621072079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28fa9b10e0d31234280b91c53cb3dc00, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  temperature: 31.5
+  maxHeight: 1.6
 --- !u!1 &8083774252611481558
 GameObject:
   m_ObjectHideFlags: 0
