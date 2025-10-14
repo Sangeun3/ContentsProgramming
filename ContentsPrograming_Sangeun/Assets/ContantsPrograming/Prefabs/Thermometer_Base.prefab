@@ -1466,7 +1466,7 @@ GameObject:
   - component: {fileID: 5538823468567404669}
   - component: {fileID: 8654093129228169984}
   m_Layer: 0
-  m_Name: Temperature_Bar_Origin
+  m_Name: Thermometer_Parent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
