@@ -1,31 +1,27 @@
-using UnityEngine;
+using System;
+using System.Collections.Generic;
 
-public class WeatherData : MonoBehaviour
+[System.Serializable]
+public class WeatherData
 {
-    //변수 선언 (데이터를 담을 상자 만들기)
-    public float temperature = 25.0f; // 온도
-    public float humidity = 60.0f; // 습도
-    public string weatherType = "맑음"; // 날씨 상태
-    public bool isRaining = true; // 비 오는지
+    public string name;         // 도시 이름 (data.name)
+    public MainData main;       // 메인 데이터 (온도, 습도 등)
+    public Weather[] weather;   // 날씨 설명 배열
+}
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        // 변수 값 출력하기
-        Debug.Log("현재 온도: " + temperature + "도");
-        Debug.Log("현재 습도: " + humidity + "%");
-        Debug.Log("날씨 상태: " + weatherType);
+[System.Serializable]
+public class MainData
+{
+    public float temp;          // 온도 (data.main.temp)
+    public int humidity;        // 습도 (data.main.humidity)
+    // 필요한 경우 pressure(기압) 등을 추가할 수 있습니다.
+}
 
-        if (isRaining)
-        {
-            Debug.Log("우산을 챙기세요! 비가 오고 있습니다!");
-        }
-        else
-        {
-            Debug.Log("비가 오지 않습니다.");
-        }
-    }
-
-
-
+[System.Serializable]
+public class Weather
+{
+    public int id;
+    public string main;
+    public string description;  // 날씨 설명 (data.weather[0].description)
+    public string icon;
 }
