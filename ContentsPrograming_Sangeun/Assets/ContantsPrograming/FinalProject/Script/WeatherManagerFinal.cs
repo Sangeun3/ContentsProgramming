@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.IO;
 using System.Text;
+using DG.Tweening; // ★ DOTween 필수
 
 public class WeatherManagerFinal : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class WeatherManagerFinal : MonoBehaviour
     public GameObject hintImageObject;
 
     [Header("★ 완료 기능 (모든 카운트 달성 시)")]
-    public GameObject completionImageObject; // 다 찾았을 때 뜰 이미지 오브젝트
+    public GameObject completionImageObject;
 
     [Header("정보 표시 텍스트")]
     public TextMeshProUGUI textCountry;
@@ -69,18 +70,25 @@ public class WeatherManagerFinal : MonoBehaviour
                 {
                     int index = i;
                     closeButtons[i].gameObject.SetActive(false);
+
+                    // ★ 혹시 모를 기존 CanvasGroup 초기화
+                    CanvasGroup cg = closeButtons[i].GetComponent<CanvasGroup>();
+                    if (cg == null) cg = closeButtons[i].gameObject.AddComponent<CanvasGroup>();
+                    cg.alpha = 1f;
+
                     closeButtons[i].onClick.RemoveAllListeners();
                     closeButtons[i].onClick.AddListener(() =>
                     {
                         closeButtons[index].gameObject.SetActive(false);
+                        closeButtons[index].transform.DOKill();
+                        if (cg != null) cg.DOKill(); // CanvasGroup 트윈도 종료
                     });
                 }
             }
         }
 
-        // 2. 힌트 및 완료 이미지 초기화
         if (hintImageObject != null) hintImageObject.SetActive(false);
-        if (completionImageObject != null) completionImageObject.SetActive(false); // 시작할 땐 숨김
+        if (completionImageObject != null) completionImageObject.SetActive(false);
 
         if (hintButton != null)
         {
@@ -88,7 +96,6 @@ public class WeatherManagerFinal : MonoBehaviour
             hintButton.onClick.AddListener(OnHintButtonClicked);
         }
 
-        // 3. 그래프 초기화
         if (tempGaugeImage != null) tempGaugeImage.fillAmount = 0;
         if (rainGaugeImage != null) rainGaugeImage.fillAmount = 0;
 
@@ -178,10 +185,59 @@ public class WeatherManagerFinal : MonoBehaviour
 
         UpdateGauges(data.avgTemp, data.rain);
 
+        // ★ [수정됨] CanvasGroup을 사용한 확실한 애니메이션 처리
         if (closeButtons != null && index < closeButtons.Length && closeButtons[index] != null)
         {
-            closeButtons[index].gameObject.SetActive(true);
+            GameObject closeObj = closeButtons[index].gameObject;
+
+            // 1. CanvasGroup 가져오기 (없으면 추가)
+            // CanvasGroup은 Button 컴포넌트의 색상 간섭을 무시하고 전체 투명도를 조절함
+            CanvasGroup cg = closeObj.GetComponent<CanvasGroup>();
+            if (cg == null) cg = closeObj.AddComponent<CanvasGroup>();
+
+            // 2. 초기화
+            closeObj.transform.DOKill();
+            cg.DOKill();
+
+            closeObj.SetActive(true);
+            closeObj.transform.localScale = Vector3.one;
+            closeObj.transform.localRotation = Quaternion.identity;
+
+            // 투명하게 시작
+            cg.alpha = 0f;
+
+            // 3. 시퀀스 생성
+            Sequence seq = DOTween.Sequence();
+
+            // 단계 1: 페이드 인 (0.5초) - Image가 아닌 CanvasGroup의 alpha를 조절
+            seq.Append(cg.DOFade(1f, 0.5f));
+
+            // 단계 2: 랜덤 액션 (2.5초 진행)
+            int randomAction = Random.Range(0, 3);
+            switch (randomAction)
+            {
+                case 0: // 깜박이기 (Blink)
+                    // CanvasGroup의 alpha를 0까지 내렸다가 올림
+                    seq.Append(cg.DOFade(0f, 0.25f).SetLoops(10, LoopType.Yoyo));
+                    break;
+                case 1: // 한바퀴 돌기
+                    seq.Join(closeObj.transform.DORotate(new Vector3(0, 0, 720), 2.5f, RotateMode.FastBeyond360));
+                    break;
+                case 2: // 흔들리기
+                    seq.Join(closeObj.transform.DOShakePosition(2.5f, strength: 15f, vibrato: 15));
+                    break;
+            }
+
+            // 단계 3: 2초 대기
+            seq.AppendInterval(2.0f);
+
+            // 단계 4: 종료
+            seq.OnComplete(() =>
+            {
+                closeObj.SetActive(false);
+            });
         }
+        // ---------------------------------------------------------
 
         if (data.isClicked) return;
 
@@ -196,7 +252,6 @@ public class WeatherManagerFinal : MonoBehaviour
         }
         UpdateCountTexts();
 
-        // ★ [추가됨] 모든 카운트가 찼는지 확인
         CheckAllCompleted();
     }
 
@@ -216,10 +271,8 @@ public class WeatherManagerFinal : MonoBehaviour
         if (textSnowCount != null) textSnowCount.text = $"{currentSnow} / {totalSnow}";
     }
 
-    // ★ [추가됨] 완료 체크 함수
     void CheckAllCompleted()
     {
-        // 3가지 날씨 모두 현재 개수와 전체 개수가 같은지 확인
         if (currentSun == totalSun && currentCloud == totalCloud && currentSnow == totalSnow)
         {
             Debug.Log("🎉 모든 아이콘 찾기 완료!");
